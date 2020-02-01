@@ -5,6 +5,9 @@ import androidx.compose.Model
 import androidx.compose.state
 import androidx.ui.layout.Column
 import androidx.ui.tooling.preview.Preview
+import com.amazonaws.mobile.client.AWSMobileClient
+import com.budilov.starter.ui.AvailableTopLevelScreens
+import com.budilov.starter.ui.topLevelNavigation
 
 enum class AvailableAuthScreen {
     LOGIN, REGISTRATION, PASSWORD_RESET
@@ -17,7 +20,8 @@ val currentScreen = CurrentScreen()
 
 @Composable
 fun AuthScreen() {
-    val state = state { CurrentScreen() }
+    if (AWSMobileClient.getInstance()?.isSignedIn == true)
+        topLevelNavigation(AvailableTopLevelScreens.HOME)
 
     Column {
         when (currentScreen.currentAuthScreen) {

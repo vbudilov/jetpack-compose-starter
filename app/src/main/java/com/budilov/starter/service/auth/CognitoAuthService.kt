@@ -226,8 +226,10 @@ object CognitoAuthService {
             })
     }
 
-    fun signOut(onStateChange: (userState: AuthStatus) -> Unit) {
+    fun signOut(onStateChange: () -> Unit) {
         AWSMobileClient.getInstance()?.signOut()
+
+        onStateChange()
     }
 
     fun globalSignOut() {

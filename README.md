@@ -4,7 +4,7 @@ I created this project to familiarize myself with JetPack Compose since that's g
 cross-OS compilation. 
 
 #### Progress so far
-
+The code is very messy and needs a lot of work, but the point was to get my hands dirty with JetPack Compose (don't judge)
 1. done: Simple navigation between top-level screens
 2. done: Login functionality
 3. todo: Registration
@@ -39,3 +39,11 @@ cross-OS compilation.
 3. Open the project with Android Studio
 4. Under the 'Run' tab select 'Run app'
 5. Enjoy
+
+#### UI
+
+My goal wasn't to create the most beautiful app so the UI will eventually improve, but here's what a login screen looks like:
+
+<img src="info/login_screen.png"
+     style="float: left; margin: 20px;" />
+
