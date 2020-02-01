@@ -7,3 +7,5 @@
 /captures
 .externalNativeBuild
 .cxx
+# you'll need to create this directory and file
+/app/src/main/res/raw/awsconfiguration.json

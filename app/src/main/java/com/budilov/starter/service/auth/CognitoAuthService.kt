@@ -4,8 +4,14 @@ import android.util.Log
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
+import com.amazonaws.mobile.client.SignOutOptions
 import com.amazonaws.mobile.client.UserState
 import com.amazonaws.mobile.client.results.*
+import com.budilov.starter.model.AuthStatus
+import com.budilov.starter.ui.auth.LoginStateEnum
+
+
+private const val TAG = "CognitoAuthService"
 
 /**
  *
@@ -17,7 +23,7 @@ object CognitoAuthService {
     fun loggedIn() {
         AWSMobileClient.getInstance().addUserStateListener { userStateDetails ->
             when (userStateDetails.userState) {
-                UserState.GUEST -> Log.i("userState", "user is in guest mode")
+                UserState.GUEST -> Log.i("userState", "user is GUEST")
                 UserState.SIGNED_OUT -> Log.i("userState", "user is signed out")
                 UserState.SIGNED_IN -> Log.i("userState", "user is signed in")
                 UserState.SIGNED_OUT_USER_POOLS_TOKENS_INVALID -> Log.i(
@@ -48,15 +54,15 @@ object CognitoAuthService {
                         if (signUpResult?.confirmationState != true) {
                             val details: UserCodeDeliveryDetails? =
                                 signUpResult?.userCodeDeliveryDetails
-                            Log.i(null, "Confirm sign-up with: " + details?.destination)
+                            Log.i(TAG, "Confirm sign-up with: " + details?.destination)
                         } else {
-                            Log.i(null, "Sign-up done.")
+                            Log.i(TAG, "Sign-up done.")
                         }
                     })
                 }
 
                 override fun onError(e: Exception?) {
-                    Log.e(null, "Sign-up error", e)
+                    Log.e(TAG, "Sign-up error", e)
                 }
 
             })
@@ -77,15 +83,15 @@ object CognitoAuthService {
                         if (!signUpResult.confirmationState) {
                             val details =
                                 signUpResult.userCodeDeliveryDetails
-                            Log.d(null, "Confirm sign-up with: " + details.destination)
+                            Log.d(TAG, "Confirm sign-up with: " + details.destination)
                         } else {
-                            Log.d(null, "Sign-up done.")
+                            Log.d(TAG, "Sign-up done.")
                         }
                     })
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(null, "Confirm sign-up error", e)
+                    Log.e(TAG, "Confirm sign-up error", e)
                 }
             })
     }
@@ -105,12 +111,16 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(null, e.toString())
+                    Log.e(TAG, e.toString())
                 }
             })
     }
 
-    fun signIn(username: String, password: String) {
+    fun signIn(
+        username: String,
+        password: String,
+        onStateChange: (loginState: LoginStateEnum) -> Unit
+    ) {
         AWSMobileClient.getInstance().signIn(
             username,
             password,
@@ -125,16 +135,24 @@ object CognitoAuthService {
                         when (signInResult.signInState) {
                             SignInState.DONE -> {
                                 println("Sign-in done.")
+                                onStateChange(LoginStateEnum.LOGGED_IN)
                             }
-                            SignInState.SMS_MFA -> println("Please confirm sign-in with SMS.")
-                            SignInState.NEW_PASSWORD_REQUIRED -> println("Please confirm sign-in with new password.")
+                            SignInState.SMS_MFA -> {
+                                println("Please confirm sign-in with SMS.")
+                                onStateChange(LoginStateEnum.SMS_MFA)
+                            }
+                            SignInState.NEW_PASSWORD_REQUIRED -> {
+                                println("Please confirm sign-in with new password.")
+                                onStateChange(LoginStateEnum.NEW_PASSWORD_REQUIRED)
+
+                            }
                             else -> println("Unsupported sign-in confirmation: " + signInResult.signInState)
                         }
                     })
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(null, "Sign-in error", e)
+                    Log.e(TAG, "Sign-in error", e)
                 }
             })
     }
@@ -156,7 +174,7 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(null, "Sign-in error", e)
+                    Log.e(TAG, "Sign-in error", e)
                 }
             })
     }
@@ -167,7 +185,7 @@ object CognitoAuthService {
             object : Callback<ForgotPasswordResult> {
                 override fun onResult(result: ForgotPasswordResult) {
                     ThreadUtils.runOnUiThread(Runnable {
-                        Log.d(null, "forgot password state: " + result.state)
+                        Log.d(TAG, "forgot password state: " + result.state)
                         when (result.state) {
                             ForgotPasswordState.CONFIRMATION_CODE -> println("Confirmation code is sent to reset password")
                             else -> Log.e(
@@ -179,7 +197,7 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(null, "forgot password error", e)
+                    Log.e(TAG, "forgot password error", e)
                 }
             })
     }
@@ -191,7 +209,7 @@ object CognitoAuthService {
             object : Callback<ForgotPasswordResult> {
                 override fun onResult(result: ForgotPasswordResult) {
                     ThreadUtils.runOnUiThread(Runnable {
-                        Log.d(null, "forgot password state: " + result.state)
+                        Log.d(TAG, "forgot password state: " + result.state)
                         when (result.state) {
                             ForgotPasswordState.DONE -> println("Password changed successfully")
                             else -> Log.e(
@@ -203,7 +221,25 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(null, "forgot password error", e)
+                    Log.e(TAG, "forgot password error", e)
+                }
+            })
+    }
+
+    fun signOut(onStateChange: (userState: AuthStatus) -> Unit) {
+        AWSMobileClient.getInstance()?.signOut()
+    }
+
+    fun globalSignOut() {
+        AWSMobileClient.getInstance()?.signOut(
+            SignOutOptions.builder().signOutGlobally(true).build(),
+            object : Callback<Void?> {
+                override fun onResult(result: Void?) {
+                    Log.d(TAG, "signed-out")
+                }
+
+                override fun onError(e: java.lang.Exception) {
+                    Log.e(TAG, "sign-out error", e)
                 }
             })
     }

@@ -1,6 +1,7 @@
 package com.budilov.starter.ui
 
 import androidx.compose.Composable
+import androidx.compose.Model
 import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
 import androidx.ui.material.MaterialTheme
@@ -11,11 +12,8 @@ import androidx.ui.text.font.FontFamily
 import androidx.ui.text.font.FontWeight
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.sp
-import com.budilov.starter.model.AuthStatus
-import com.budilov.starter.model.Navigation
 import com.budilov.starter.ui.auth.AuthScreen
 import com.budilov.starter.ui.home.HomeScreen
-import com.budilov.starter.ui.auth.LoginScreen
 
 
 val colors = lightColorPalette(
@@ -37,34 +35,42 @@ val typography = Typography(
     )
 )
 
+enum class AvailableTopLevelScreens {
+    AUTH, HOME
+}
+
+@Model
+data class CurrentTopLevelScreen(var currentScreen: AvailableTopLevelScreens)
+
+
+val currentTopLevelScreens = CurrentTopLevelScreen(currentScreen = AvailableTopLevelScreens.AUTH)
+
 @Composable
-fun MyAppUI(authStatus: AuthStatus, navigation: Navigation? = null) {
+fun MyAppUI() {
     MaterialTheme(colors = colors, typography = typography) {
-            Column {
-                if (authStatus.loggedIn)
-                    HomeScreen()
-                else
-                    AuthScreen()
+        Column {
+            when (currentTopLevelScreens.currentScreen) {
+                AvailableTopLevelScreens.AUTH -> AuthScreen()
+                AvailableTopLevelScreens.HOME -> HomeScreen()
             }
+        }
     }
 }
 
 @Preview("LoggedIn")
 @Composable
 fun MyAppPreviewLoggedIn() {
-    MyAppUI(
-        authStatus = AuthStatus(
-            true
-        )
-    )
+    currentTopLevelScreens.currentScreen = AvailableTopLevelScreens.HOME
+    MyAppUI()
 }
 
 @Preview("Not LoggedIn")
 @Composable
 fun MyAppPreviewNotLoggedIn() {
-    MyAppUI(
-        authStatus = AuthStatus(
-            false
-        )
-    )
+    currentTopLevelScreens.currentScreen = AvailableTopLevelScreens.AUTH
+    MyAppUI()
+}
+
+fun topLevelNavigation(currentScreen: AvailableTopLevelScreens) {
+    currentTopLevelScreens.currentScreen = currentScreen
 }

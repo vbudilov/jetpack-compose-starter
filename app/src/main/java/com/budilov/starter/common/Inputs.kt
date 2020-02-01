@@ -15,7 +15,6 @@ import androidx.ui.layout.Padding
 import androidx.ui.material.surface.Surface
 import androidx.ui.unit.Dp
 import androidx.ui.unit.dp
-import com.budilov.starter.ui.auth.LoginInput
 
 enum class InputHintLocation {
     TOP, INLINE
@@ -23,44 +22,39 @@ enum class InputHintLocation {
 
 @Composable
 fun TextBox(
-    loginInput: LoginInput,
     hint: String = "username",
     hintLocation: InputHintLocation = InputHintLocation.TOP,
     color: Color = Color.LightGray,
-    height: Dp = 50.dp
+    height: Dp = 60.dp,
+    onValueChange: (input: String) -> Unit
 ) {
 
-    val state = state { "" }
-    if (hintLocation == InputHintLocation.INLINE)
-        state.value = if (loginInput.usernameEntered) loginInput.username else hint
+    val input = if (InputHintLocation.INLINE == hintLocation) state { hint } else state { "" }
 
-    var hideHint = false
+    val inputEntered = state { false }
 
     // Let's round out the corners
     Surface(color = color, shape = RoundedCornerShape(14.dp)) {
         Container(height = height) {
             Padding(left = 6.dp) {
                 Container(alignment = Alignment.CenterLeft) {
-                    Column() {
-                        if (hintLocation == InputHintLocation.TOP && !hideHint)
+                    Column {
+                        if (hintLocation == InputHintLocation.TOP)
                             Text(text = hint)
-                        Padding(left = 10.dp, top = 10.dp) {
+                        Padding(left = 6.dp, top = 6.dp, bottom = 10.dp) {
 
                             TextField(
-                                value = state.value,
+                                value = input.value,
                                 keyboardType = KeyboardType.Text,
                                 onFocus = {
-                                    if (!loginInput.usernameEntered)
-                                        state.value = ""
-                                    hideHint = true
-                                },
-                                onBlur = {
-                                    hideHint = false
+                                    if (inputEntered.value)
+                                        input.value = ""
                                 },
                                 onValueChange = {
-                                    loginInput.usernameEntered = true
-                                    loginInput.username = it
-                                    state.value = loginInput.username
+                                    if (it.isNotBlank())
+                                        inputEntered.value = true
+                                    input.value = it
+                                    onValueChange(it)
                                 }
                             )
                         }
@@ -74,41 +68,38 @@ fun TextBox(
 
 @Composable
 fun PasswordBox(
-    loginInput: LoginInput,
     hint: String = "password",
     hintLocation: InputHintLocation = InputHintLocation.TOP,
     color: Color = Color.LightGray,
-    height: Dp = 50.dp
+    height: Dp = 60.dp,
+    onValueChange: (input: String) -> Unit
 ) {
-    val state = state { "" }
-    if (hintLocation == InputHintLocation.INLINE)
-        state.value = if (loginInput.usernameEntered) loginInput.username else hint
 
-    var hideHint = false
+    val input = if (InputHintLocation.INLINE == hintLocation) state { hint } else state { "" }
+
+    val inputEntered = state { false }
 
     Surface(color = color, shape = RoundedCornerShape(14.dp)) {
         Container(height = height) {
             Padding(padding = 6.dp) {
                 Container(alignment = Alignment.CenterLeft) {
-                    Column() {
+                    Column {
                         if (hintLocation == InputHintLocation.TOP)
                             Text(hint)
-                        Padding(left = 10.dp, top = 10.dp) {
+                        Padding(left = 6.dp, top = 6.dp, bottom = 10.dp) {
 
                             PasswordTextField(
-                                value = state.value,
+                                value = input.value,
                                 onFocus = {
-                                    if (!loginInput.usernameEntered)
-                                        state.value = ""
-                                    hideHint = !hideHint
-                                },
-                                onBlur = {
-                                    hideHint = !hideHint
+                                    if (!inputEntered.value)
+                                        input.value = ""
                                 },
                                 onValueChange = {
-                                    loginInput.usernameEntered = true
-                                    loginInput.username = it
-                                    state.value = loginInput.username
+                                    if (it.isNotBlank())
+                                        inputEntered.value = true
+
+                                    input.value = it
+                                    onValueChange(it)
                                 }
                             )
                         }
