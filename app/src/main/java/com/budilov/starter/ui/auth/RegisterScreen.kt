@@ -32,54 +32,37 @@ data class RegInput(
 fun RegisterScreen() {
 
     val regInput = RegInput()
-    val image = imageResource(R.drawable.img_logo)
 
-    Surface(modifier = LayoutHeight.Fill, color = Color.White) {
-        Column(arrangement = Arrangement.Begin) {
-            Container(
-                alignment = Alignment.Center, modifier = LayoutWidth.Fill,
-                expanded = true, height = 150.dp
-            ) {
-                Opacity(opacity = .6f) {
-                    DrawImage(image = image)
-                }
-            }
-            Padding(padding = 10.dp) {
+    VerticalScroller {
 
-                VerticalScroller {
+        Column(arrangement = Arrangement.SpaceEvenly) {
+            Spacer(modifier = LayoutHeight(100.dp))
+            Title(
+                text = "Register",
+                color = colors.primary
+            )
 
-                    Column(arrangement = Arrangement.SpaceEvenly) {
-                        Spacer(modifier = LayoutHeight(100.dp))
-                        Title(
-                            text = "Register",
-                            color = colors.primary
-                        )
+            Spacer(modifier = LayoutHeight(30.dp))
+            TextBox(onValueChange = { input -> regInput.username = input })
 
-                        Spacer(modifier = LayoutHeight(30.dp))
-                        TextBox(onValueChange = { input -> regInput.username = input })
+            Spacer(modifier = LayoutHeight(5.dp))
+            PasswordBox(onValueChange = { input -> regInput.password = input })
 
-                        Spacer(modifier = LayoutHeight(5.dp))
-                        PasswordBox(onValueChange = { input -> regInput.password = input })
+            Spacer(modifier = LayoutHeight(15.dp))
+            Container(alignment = Alignment.Center, expanded = true) {
 
-                        Spacer(modifier = LayoutHeight(15.dp))
-                        Container(alignment = Alignment.Center, expanded = true) {
-
-                            Button(modifier = LayoutWidth.Fill,
-                                text = "Create Account",
-                                style = ButtonStyle(
-                                    elevation = 3.dp,
-                                    backgroundColor = colors.primary, contentColor = Color.White,
-                                    shape = RoundedCornerShape(3.dp)
-                                ),
-                                onClick = {
-                                    CognitoAuthService.signUp(regInput.username, regInput.password)
-                                })
-                        }
-                    }
-                }
+                Button(modifier = LayoutWidth.Fill,
+                    text = "Create Account",
+                    style = ButtonStyle(
+                        elevation = 3.dp,
+                        backgroundColor = colors.primary, contentColor = Color.White,
+                        shape = RoundedCornerShape(3.dp)
+                    ),
+                    onClick = {
+                        CognitoAuthService.signUp(regInput.username, regInput.password)
+                    })
             }
         }
-
     }
 }
 

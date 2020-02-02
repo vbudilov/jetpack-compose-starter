@@ -41,8 +41,6 @@ val TAG = "HomeScreen"
 @Composable
 fun HomeScreen() {
 
-
-
     Column {
         TopBar()
         VerticalScroller(modifier = LayoutHeight.Fill) {

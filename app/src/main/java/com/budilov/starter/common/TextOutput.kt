@@ -15,7 +15,20 @@ fun Title(text: String, color: Color) {
         style = TextStyle(
             fontFamily = FontFamily("Roboto"),
             fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
+            fontSize = 20.sp,
+            color = color
+        )
+    )
+}
+
+@Composable
+fun InputError(text: String, color: Color = Color.Red) {
+    Text(
+        text = text,
+        style = TextStyle(
+            fontFamily = FontFamily("Roboto"),
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
             color = color
         )
     )

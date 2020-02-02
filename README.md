@@ -23,7 +23,7 @@ The code is very messy and needs a lot of work, but the point was to get my hand
 
 0. Before working with this project you need to setup a [Cognito User Pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html) and 
 add an 'awsconfiguration.json' with the appropriate user pool configurations under './app/src/main/res/raw/' 
-(more instructions [here](https://aws-amplify.github.io/docs/android/authentication#manual-setup):
+(more instructions [here](https://aws-amplify.github.io/docs/android/authentication#manual-setup)):
 
 ```json
     {

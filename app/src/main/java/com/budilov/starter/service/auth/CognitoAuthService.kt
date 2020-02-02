@@ -1,6 +1,7 @@
 package com.budilov.starter.service.auth
 
 import android.util.Log
+import androidx.ui.text.substring
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
@@ -8,6 +9,7 @@ import com.amazonaws.mobile.client.SignOutOptions
 import com.amazonaws.mobile.client.UserState
 import com.amazonaws.mobile.client.results.*
 import com.budilov.starter.model.AuthStatus
+import com.budilov.starter.ui.auth.LoginState
 import com.budilov.starter.ui.auth.LoginStateEnum
 
 
@@ -62,7 +64,9 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: Exception?) {
-                    Log.e(TAG, "Sign-up error", e)
+                    ThreadUtils.runOnUiThread(Runnable {
+                        Log.e(TAG, "Sign-up error", e)
+                    })
                 }
 
             })
@@ -91,7 +95,8 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(TAG, "Confirm sign-up error", e)
+                    ThreadUtils.runOnUiThread(Runnable {
+                    Log.e(TAG, "Confirm sign-up error", e) })
                 }
             })
     }
@@ -102,16 +107,19 @@ object CognitoAuthService {
             object :
                 Callback<SignUpResult> {
                 override fun onResult(signUpResult: SignUpResult) {
+                    ThreadUtils.runOnUiThread(Runnable {
                     Log.i(
                         null, "A verification code has been sent via" +
                                 signUpResult.userCodeDeliveryDetails.deliveryMedium
                                 + " at " +
                                 signUpResult.userCodeDeliveryDetails.destination
-                    )
+                    )})
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(TAG, e.toString())
+                    ThreadUtils.runOnUiThread(Runnable {
+                        Log.e(TAG, e.toString())
+                    })
                 }
             })
     }
@@ -119,7 +127,7 @@ object CognitoAuthService {
     fun signIn(
         username: String,
         password: String,
-        onStateChange: (loginState: LoginStateEnum) -> Unit
+        onStateChange: (loginState: LoginState) -> Unit
     ) {
         AWSMobileClient.getInstance().signIn(
             username,
@@ -135,16 +143,15 @@ object CognitoAuthService {
                         when (signInResult.signInState) {
                             SignInState.DONE -> {
                                 println("Sign-in done.")
-                                onStateChange(LoginStateEnum.LOGGED_IN)
+                                onStateChange(LoginState(LoginStateEnum.LOGGED_IN, "Success"))
                             }
                             SignInState.SMS_MFA -> {
                                 println("Please confirm sign-in with SMS.")
-                                onStateChange(LoginStateEnum.SMS_MFA)
+                                onStateChange(LoginState(LoginStateEnum.SMS_MFA, "Please confirm sign-in with SMS"))
                             }
                             SignInState.NEW_PASSWORD_REQUIRED -> {
                                 println("Please confirm sign-in with new password.")
-                                onStateChange(LoginStateEnum.NEW_PASSWORD_REQUIRED)
-
+                                onStateChange(LoginState(LoginStateEnum.NEW_PASSWORD_REQUIRED, "Please confirm sign-in with new password"))
                             }
                             else -> println("Unsupported sign-in confirmation: " + signInResult.signInState)
                         }
@@ -152,7 +159,10 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(TAG, "Sign-in error", e)
+                    ThreadUtils.runOnUiThread(Runnable {
+                        Log.e(TAG, "Couldn't sign in ${e}")
+                        onStateChange(LoginState(LoginStateEnum.LOGIN_ERROR, e.message))
+                    })
                 }
             })
     }
@@ -162,19 +172,24 @@ object CognitoAuthService {
             password,
             object : Callback<SignInResult> {
                 override fun onResult(signInResult: SignInResult) {
-                    Log.d(
-                        null,
-                        "Sign-in callback state: " + signInResult.signInState
-                    )
-                    when (signInResult.signInState) {
-                        SignInState.DONE -> println("Sign-in done.")
-                        SignInState.SMS_MFA -> println("Please confirm sign-in with SMS.")
-                        else -> println("Unsupported sign-in confirmation: " + signInResult.signInState)
-                    }
+                    ThreadUtils.runOnUiThread(Runnable {
+                        Log.d(
+                            null,
+                            "Sign-in callback state: " + signInResult.signInState
+                        )
+                        when (signInResult.signInState) {
+                            SignInState.DONE -> println("Sign-in done.")
+                            SignInState.SMS_MFA -> println("Please confirm sign-in with SMS.")
+                            else -> println("Unsupported sign-in confirmation: " + signInResult.signInState)
+                        }
+                    })
+
+
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(TAG, "Sign-in error", e)
+                    ThreadUtils.runOnUiThread(Runnable {
+                    Log.e(TAG, "Sign-in error", e) })
                 }
             })
     }
@@ -197,7 +212,10 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(TAG, "forgot password error", e)
+                    ThreadUtils.runOnUiThread(Runnable {
+                        Log.e(TAG, "forgot password error", e)
+
+                    })
                 }
             })
     }
@@ -221,7 +239,10 @@ object CognitoAuthService {
                 }
 
                 override fun onError(e: java.lang.Exception) {
-                    Log.e(TAG, "forgot password error", e)
+                    ThreadUtils.runOnUiThread(Runnable {
+                        Log.e(TAG, "forgot password error", e)
+
+                    })
                 }
             })
     }
