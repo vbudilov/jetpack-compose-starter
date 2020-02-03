@@ -18,7 +18,7 @@ import com.budilov.starter.ui.AvailableTopLevelScreens
 import com.budilov.starter.ui.topLevelNavigation
 
 enum class AvailableAuthScreen {
-    LOGIN, REGISTRATION, PASSWORD_RESET
+    LOGIN, REGISTRATION, PASSWORD_RESET, PASSWORD_CONFIRM
 }
 
 @Model

@@ -59,7 +59,9 @@ fun RegisterScreen() {
                         shape = RoundedCornerShape(3.dp)
                     ),
                     onClick = {
-                        CognitoAuthService.signUp(regInput.username, regInput.password)
+                        CognitoAuthService.signUp(regInput.username, regInput.password, onSignUp = {
+
+                        })
                     })
             }
         }

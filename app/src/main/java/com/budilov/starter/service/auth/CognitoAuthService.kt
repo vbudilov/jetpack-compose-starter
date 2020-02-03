@@ -41,12 +41,10 @@ object CognitoAuthService {
         }
     }
 
-    fun signUp(username: String, password: String) {
+    fun signUp(username: String, password: String, onSignUp: () -> Unit) {
 
-        val attributes: MutableMap<String, String> = HashMap()
-        attributes["email"] = "name@email.com"
         AWSMobileClient.getInstance()
-            .signUp(username, password, attributes, null, object : Callback<SignUpResult?> {
+            .signUp(username, password, null, null, object : Callback<SignUpResult?> {
                 override fun onResult(signUpResult: SignUpResult?) {
                     ThreadUtils.runOnUiThread(Runnable {
                         Log.d(
@@ -183,8 +181,6 @@ object CognitoAuthService {
                             else -> println("Unsupported sign-in confirmation: " + signInResult.signInState)
                         }
                     })
-
-
                 }
 
                 override fun onError(e: java.lang.Exception) {
@@ -194,7 +190,7 @@ object CognitoAuthService {
             })
     }
 
-    fun forgotPassword(username: String) {
+    fun forgotPassword(username: String, onForgotPassword: (success: Boolean)-> Unit) {
         AWSMobileClient.getInstance().forgotPassword(
             "username",
             object : Callback<ForgotPasswordResult> {
@@ -266,4 +262,5 @@ object CognitoAuthService {
                 }
             })
     }
+
 }
