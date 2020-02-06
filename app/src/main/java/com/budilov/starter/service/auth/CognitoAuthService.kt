@@ -1,14 +1,12 @@
 package com.budilov.starter.service.auth
 
 import android.util.Log
-import androidx.ui.text.substring
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.SignOutOptions
 import com.amazonaws.mobile.client.UserState
 import com.amazonaws.mobile.client.results.*
-import com.budilov.starter.model.AuthStatus
 import com.budilov.starter.ui.auth.LoginState
 import com.budilov.starter.ui.auth.LoginStateEnum
 
@@ -41,6 +39,13 @@ object CognitoAuthService {
         }
     }
 
+    /**
+     * The classical sign-up flow where a user enters his username and password, as opposed to the password-less
+     * flow where the user enters an email or phone number and the login code is emailed/sms'ed to him:
+     * https://aws.amazon.com/blogs/mobile/implementing-passwordless-email-authentication-with-amazon-cognito/
+     * :
+     *
+     */
     fun signUp(username: String, password: String, onSignUp: () -> Unit) {
 
         AWSMobileClient.getInstance()
@@ -94,7 +99,8 @@ object CognitoAuthService {
 
                 override fun onError(e: java.lang.Exception) {
                     ThreadUtils.runOnUiThread(Runnable {
-                    Log.e(TAG, "Confirm sign-up error", e) })
+                        Log.e(TAG, "Confirm sign-up error", e)
+                    })
                 }
             })
     }
@@ -106,12 +112,13 @@ object CognitoAuthService {
                 Callback<SignUpResult> {
                 override fun onResult(signUpResult: SignUpResult) {
                     ThreadUtils.runOnUiThread(Runnable {
-                    Log.i(
-                        null, "A verification code has been sent via" +
-                                signUpResult.userCodeDeliveryDetails.deliveryMedium
-                                + " at " +
-                                signUpResult.userCodeDeliveryDetails.destination
-                    )})
+                        Log.i(
+                            null, "A verification code has been sent via" +
+                                    signUpResult.userCodeDeliveryDetails.deliveryMedium
+                                    + " at " +
+                                    signUpResult.userCodeDeliveryDetails.destination
+                        )
+                    })
                 }
 
                 override fun onError(e: java.lang.Exception) {
@@ -145,11 +152,21 @@ object CognitoAuthService {
                             }
                             SignInState.SMS_MFA -> {
                                 println("Please confirm sign-in with SMS.")
-                                onStateChange(LoginState(LoginStateEnum.SMS_MFA, "Please confirm sign-in with SMS"))
+                                onStateChange(
+                                    LoginState(
+                                        LoginStateEnum.SMS_MFA,
+                                        "Please confirm sign-in with SMS"
+                                    )
+                                )
                             }
                             SignInState.NEW_PASSWORD_REQUIRED -> {
                                 println("Please confirm sign-in with new password.")
-                                onStateChange(LoginState(LoginStateEnum.NEW_PASSWORD_REQUIRED, "Please confirm sign-in with new password"))
+                                onStateChange(
+                                    LoginState(
+                                        LoginStateEnum.NEW_PASSWORD_REQUIRED,
+                                        "Please confirm sign-in with new password"
+                                    )
+                                )
                             }
                             else -> println("Unsupported sign-in confirmation: " + signInResult.signInState)
                         }
@@ -185,12 +202,13 @@ object CognitoAuthService {
 
                 override fun onError(e: java.lang.Exception) {
                     ThreadUtils.runOnUiThread(Runnable {
-                    Log.e(TAG, "Sign-in error", e) })
+                        Log.e(TAG, "Sign-in error", e)
+                    })
                 }
             })
     }
 
-    fun forgotPassword(username: String, onForgotPassword: (success: Boolean)-> Unit) {
+    fun forgotPassword(username: String, onForgotPassword: (success: Boolean) -> Unit) {
         AWSMobileClient.getInstance().forgotPassword(
             "username",
             object : Callback<ForgotPasswordResult> {

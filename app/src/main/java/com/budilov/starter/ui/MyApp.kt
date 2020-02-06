@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.compose.Composable
 import androidx.compose.Model
 import androidx.compose.state
+import androidx.ui.foundation.isSystemInDarkTheme
 import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Typography
+import androidx.ui.material.darkColorPalette
 import androidx.ui.material.lightColorPalette
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
@@ -16,15 +18,22 @@ import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.sp
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.budilov.starter.ui.auth.AuthScreen
-import com.budilov.starter.ui.home.HomeScreen
-import com.budilov.starter.ui.home.TAG
+import com.budilov.starter.ui.secure.HomeScreen
+import com.budilov.starter.ui.secure.TAG
 
 
-val colors = lightColorPalette(
+val lightColors = lightColorPalette(
     primary = Color(0xFF1EB980),
     surface = Color(0xFF26282F),
     onSurface = Color.White
 )
+
+
+val darkColors = darkColorPalette(
+    primary = Color(0xFF66ffc7)
+)
+
+val colors = if (isSystemInDarkTheme()) darkColors else lightColors
 
 val typography = Typography(
     h1 = TextStyle(
@@ -71,6 +80,8 @@ fun MyAppUI() {
             }
         }
     }
+
+
 }
 
 @Preview("LoggedIn")

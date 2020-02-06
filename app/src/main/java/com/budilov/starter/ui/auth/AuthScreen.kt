@@ -2,7 +2,6 @@ package com.budilov.starter.ui.auth
 
 import androidx.compose.Composable
 import androidx.compose.Model
-import androidx.compose.state
 import androidx.ui.core.Alignment
 import androidx.ui.core.Opacity
 import androidx.ui.foundation.DrawImage

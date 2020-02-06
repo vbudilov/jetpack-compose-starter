@@ -1,8 +1,6 @@
 package com.budilov.starter.ui.auth
 
-import android.util.Log
 import androidx.compose.Composable
-import androidx.compose.Model
 import androidx.compose.state
 import androidx.ui.core.Alignment
 import androidx.ui.foundation.VerticalScroller
@@ -13,11 +11,6 @@ import androidx.ui.material.Button
 import androidx.ui.material.ButtonStyle
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
-import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils
-import com.amazonaws.mobile.client.AWSMobileClient
-import com.amazonaws.mobile.client.Callback
-import com.amazonaws.mobile.client.results.SignInResult
-import com.amazonaws.mobile.client.results.SignInState
 import com.budilov.starter.common.InputError
 import com.budilov.starter.common.PasswordBox
 import com.budilov.starter.common.TextBox
@@ -42,7 +35,7 @@ data class PasswordConfirmState(var state: LoginStateEnum? = null, var message: 
 fun PasswordConfirm() {
 
     val loginInput = LoginInput()
-    var loginOutput = state {""}
+    var loginOutput = state { "" }
 
 
     VerticalScroller {
@@ -80,19 +73,19 @@ fun PasswordConfirm() {
                             // Have to do a try..catch since otherwise I'm getting a java.lang.IllegalStateException: Not in a frame
                             // Not sure why so it's a workaround for now
 
-                                when (it.state) {
-                                    LoginStateEnum.LOGGED_IN -> {
+                            when (it.state) {
+                                LoginStateEnum.LOGGED_IN -> {
 
-                                        loginOutput.value = it.message.toString()
-                                        topLevelNavigation(
-                                            AvailableTopLevelScreens.HOME
+                                    loginOutput.value = it.message.toString()
+                                    topLevelNavigation(
+                                        AvailableTopLevelScreens.HOME
 
-                                        )
-                                    }
-                                    LoginStateEnum.LOGIN_ERROR -> {
-                                        loginOutput.value = it.message.toString()
-                                    }
+                                    )
                                 }
+                                LoginStateEnum.LOGIN_ERROR -> {
+                                    loginOutput.value = it.message.toString()
+                                }
+                            }
                         }
                     })
             }

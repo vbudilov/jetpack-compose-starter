@@ -47,8 +47,9 @@ fun TextBox(
                                 value = input.value,
                                 keyboardType = KeyboardType.Text,
                                 onFocus = {
-                                    if (inputEntered.value)
-                                        input.value = ""
+                                    if (hintLocation == InputHintLocation.INLINE)
+                                        if (inputEntered.value)
+                                            input.value = ""
                                 },
                                 onValueChange = {
                                     if (it.isNotBlank())

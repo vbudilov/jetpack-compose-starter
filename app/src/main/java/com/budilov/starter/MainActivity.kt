@@ -9,10 +9,7 @@ import androidx.ui.tooling.preview.Preview
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
-import com.budilov.starter.service.auth.CognitoAuthService
-import com.budilov.starter.ui.AvailableTopLevelScreens
 import com.budilov.starter.ui.MyAppUI
-import com.budilov.starter.ui.topLevelNavigation
 
 private const val TAG = "MainActivity"
 
