@@ -1,4 +1,4 @@
-package com.budilov.starter.ui.secure
+package com.budilov.starter.ui.home
 
 import android.content.Context
 import android.content.Intent
@@ -6,9 +6,11 @@ import androidx.annotation.DrawableRes
 import androidx.compose.Composable
 import androidx.compose.ambient
 import androidx.compose.remember
+import androidx.ui.core.Alignment
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.Text
 import androidx.ui.foundation.Clickable
+import androidx.ui.foundation.DrawImage
 import androidx.ui.foundation.VerticalScroller
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
@@ -40,28 +42,59 @@ val TAG = "HomeScreen"
 fun HomeScreen() {
     val scaffoldState = remember { ScaffoldState() }
 
-    val image = imageResource(R.drawable.img_hamburger)
+    val imgHamburger = imageResource(R.drawable.img_menu_hamburger)
 
+    val imgDrawer = imageResource(R.drawable.img_drawer_top)
 
     Scaffold(
         scaffoldState = scaffoldState,
-        drawerContent = { Column {
-            Text("Drawer content")
-            Text("Drawer content")
-            Text("Drawer content")
-            Text("Drawer content")
-            Text("Drawer content")
-            Text("Drawer content")
-            Text("Drawer content")
-            Text("Drawer content")
-            Text("Drawer content")
+        drawerContent = {
+            Container(alignment = Alignment.TopLeft, expanded = true) {
+                Column {
+                    Container(height = 150.dp, expanded = true) {
+                        DrawImage(image = imgDrawer)
+                    }
+                    VerticalScroller(modifier = LayoutHeight.Fill) {
+                        Padding(left = 15.dp) {
+                            Column {
+                                Spacer(modifier = LayoutHeight(15.dp))
+                                Text("Your Profile")
+                                Button(
+                                    style = TextButtonStyle(shape = RoundedCornerShape(10.dp)),
+                                    modifier = LayoutPadding(5.dp), text = "Personal Info"
+                                )
+                                Button(
+                                    style = TextButtonStyle(shape = RoundedCornerShape(10.dp)),
+                                    modifier = LayoutPadding(5.dp), text = "Messages"
+                                )
 
-        } },
+                                Spacer(modifier = LayoutHeight(15.dp))
+                                Text("Notifications")
+                                Button(
+                                    style = TextButtonStyle(shape = RoundedCornerShape(10.dp)),
+                                    modifier = LayoutPadding(5.dp), text = "Messaging"
+                                )
+                                Button(
+                                    style = TextButtonStyle(shape = RoundedCornerShape(10.dp)),
+                                    modifier = LayoutPadding(5.dp), text = "External"
+                                )
+
+                                Spacer(modifier = LayoutHeight(15.dp))
+                                Button(
+                                    style = TextButtonStyle(shape = RoundedCornerShape(10.dp)),
+                                    text = "My Connections"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
         topAppBar = {
             TopAppBar(
                 title = { Text("Simple Scaffold Screen") },
                 navigationIcon = {
-                    AppBarIcon(image, onClick = {
+                    AppBarIcon(imgHamburger, onClick = {
                         scaffoldState.drawerState = DrawerState.Opened
                     })
                 }

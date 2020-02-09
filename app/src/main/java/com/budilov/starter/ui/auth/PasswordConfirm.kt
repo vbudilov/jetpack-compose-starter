@@ -3,6 +3,7 @@ package com.budilov.starter.ui.auth
 import androidx.compose.Composable
 import androidx.compose.state
 import androidx.ui.core.Alignment
+import androidx.ui.core.Text
 import androidx.ui.foundation.VerticalScroller
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
@@ -12,10 +13,10 @@ import androidx.ui.material.ButtonStyle
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.budilov.starter.common.InputError
-import com.budilov.starter.common.PasswordBox
 import com.budilov.starter.common.TextBox
 import com.budilov.starter.common.Title
 import com.budilov.starter.service.auth.CognitoAuthService
+import com.budilov.starter.service.auth.LoginStateEnum
 import com.budilov.starter.ui.AvailableTopLevelScreens
 import com.budilov.starter.ui.colors
 import com.budilov.starter.ui.topLevelNavigation
@@ -32,7 +33,7 @@ enum class PasswordConfirmStateEnum {
 data class PasswordConfirmState(var state: LoginStateEnum? = null, var message: String? = null)
 
 @Composable
-fun PasswordConfirm() {
+fun PasswordConfirm(username: String) {
 
     val loginInput = LoginInput()
     var loginOutput = state { "" }
@@ -43,7 +44,7 @@ fun PasswordConfirm() {
         Column(arrangement = Arrangement.SpaceEvenly) {
             Spacer(modifier = LayoutHeight(100.dp))
             Title(
-                text = "Login",
+                text = "Confirm your account",
                 color = colors.primary
             )
 
@@ -51,10 +52,12 @@ fun PasswordConfirm() {
                 InputError(text = loginOutput.value)
 
             Spacer(modifier = LayoutHeight(30.dp))
-            TextBox(onValueChange = { input -> loginInput.username = input })
+            Text(text = username)
 
             Spacer(modifier = LayoutHeight(5.dp))
-            PasswordBox(onValueChange = { input -> loginInput.password = input })
+            TextBox(
+                hint = "confirmation code",
+                onValueChange = { input -> loginInput.password = input })
 
             Spacer(modifier = LayoutHeight(15.dp))
             Container(alignment = Alignment.Center, expanded = true) {
@@ -96,5 +99,5 @@ fun PasswordConfirm() {
 @Preview
 @Composable
 fun PasswordConfirmScreenPreview() {
-    PasswordConfirm()
+    PasswordConfirm("hello@there.com")
 }

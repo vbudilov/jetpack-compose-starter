@@ -18,8 +18,8 @@ import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.sp
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.budilov.starter.ui.auth.AuthScreen
-import com.budilov.starter.ui.secure.HomeScreen
-import com.budilov.starter.ui.secure.TAG
+import com.budilov.starter.ui.home.HomeScreen
+import com.budilov.starter.ui.home.TAG
 
 
 val lightColors = lightColorPalette(

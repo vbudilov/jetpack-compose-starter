@@ -8,10 +8,9 @@ import com.amazonaws.mobile.client.SignOutOptions
 import com.amazonaws.mobile.client.UserState
 import com.amazonaws.mobile.client.results.*
 import com.budilov.starter.ui.auth.LoginState
-import com.budilov.starter.ui.auth.LoginStateEnum
-
 
 private const val TAG = "CognitoAuthService"
+
 
 /**
  *
@@ -20,21 +19,39 @@ private const val TAG = "CognitoAuthService"
  */
 object CognitoAuthService {
 
-    fun loggedIn() {
+    fun loggedIn(callback: (com.budilov.starter.service.auth.UserState) -> Unit) {
         AWSMobileClient.getInstance().addUserStateListener { userStateDetails ->
             when (userStateDetails.userState) {
-                UserState.GUEST -> Log.i("userState", "user is GUEST")
-                UserState.SIGNED_OUT -> Log.i("userState", "user is signed out")
-                UserState.SIGNED_IN -> Log.i("userState", "user is signed in")
-                UserState.SIGNED_OUT_USER_POOLS_TOKENS_INVALID -> Log.i(
-                    "userState",
-                    "need to login again"
-                )
-                UserState.SIGNED_OUT_FEDERATED_TOKENS_INVALID -> Log.i(
-                    "userState",
-                    "user logged in via federation, but currently needs new tokens"
-                )
-                else -> Log.e("userState", "unsupported")
+                UserState.GUEST -> {
+                    Log.i("userState", "user is GUEST")
+                    callback(com.budilov.starter.service.auth.UserState.GUEST)
+                }
+                UserState.SIGNED_OUT -> {
+                    Log.i("userState", "user is signed out")
+                    callback(com.budilov.starter.service.auth.UserState.SIGNED_OUT)
+                }
+                UserState.SIGNED_IN -> {
+                    Log.i("userState", "user is signed in")
+                    callback(com.budilov.starter.service.auth.UserState.SIGNED_IN)
+                }
+                UserState.SIGNED_OUT_USER_POOLS_TOKENS_INVALID -> {
+                    Log.i(
+                        "userState",
+                        "need to login again"
+                    )
+                    callback(com.budilov.starter.service.auth.UserState.SIGNED_OUT_USER_POOLS_TOKENS_INVALID)
+                }
+                UserState.SIGNED_OUT_FEDERATED_TOKENS_INVALID -> {
+                    Log.i(
+                        "userState",
+                        "user logged in via federation, but currently needs new tokens"
+                    )
+                    callback(com.budilov.starter.service.auth.UserState.SIGNED_OUT_FEDERATED_TOKENS_INVALID)
+                }
+                else -> {
+                    Log.e("userState", "unsupported")
+                    callback(com.budilov.starter.service.auth.UserState.UNKNOWN)
+                }
             }
         }
     }

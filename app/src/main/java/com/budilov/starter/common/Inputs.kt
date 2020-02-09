@@ -23,13 +23,14 @@ enum class InputHintLocation {
 @Composable
 fun TextBox(
     hint: String = "username",
+    value: String = "",
     hintLocation: InputHintLocation = InputHintLocation.TOP,
     color: Color = Color.LightGray,
     height: Dp = 60.dp,
     onValueChange: (input: String) -> Unit
 ) {
 
-    val input = if (InputHintLocation.INLINE == hintLocation) state { hint } else state { "" }
+    val input = if (InputHintLocation.INLINE == hintLocation) state { hint } else state { value }
 
     val inputEntered = state { false }
 
@@ -55,6 +56,7 @@ fun TextBox(
                                     if (it.isNotBlank())
                                         inputEntered.value = true
                                     input.value = it
+
                                     onValueChange(it)
                                 }
                             )

@@ -16,6 +16,7 @@ import com.budilov.starter.common.PasswordBox
 import com.budilov.starter.common.TextBox
 import com.budilov.starter.common.Title
 import com.budilov.starter.service.auth.CognitoAuthService
+import com.budilov.starter.service.auth.LoginStateEnum
 import com.budilov.starter.ui.AvailableTopLevelScreens
 import com.budilov.starter.ui.colors
 import com.budilov.starter.ui.topLevelNavigation
@@ -24,10 +25,6 @@ data class LoginInput(
     var username: String = "",
     var password: String = ""
 )
-
-enum class LoginStateEnum {
-    SMS_MFA, LOGGED_IN, NEW_PASSWORD_REQUIRED, LOGIN_ERROR
-}
 
 data class LoginState(var state: LoginStateEnum? = null, var message: String? = null)
 

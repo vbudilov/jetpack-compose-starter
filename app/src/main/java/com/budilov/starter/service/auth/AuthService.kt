@@ -1,0 +1,9 @@
+package com.budilov.starter.service.auth
+
+enum class UserState {
+    SIGNED_IN, GUEST, SIGNED_OUT_FEDERATED_TOKENS_INVALID, SIGNED_OUT_USER_POOLS_TOKENS_INVALID, SIGNED_OUT, UNKNOWN
+}
+
+enum class LoginStateEnum {
+    SMS_MFA, LOGGED_IN, NEW_PASSWORD_REQUIRED, LOGIN_ERROR, UNSUPPORTED
+}
