@@ -36,13 +36,12 @@ fun HomeScreenPreview() {
     HomeScreen()
 }
 
-val TAG = "HomeScreen"
+const val TAG = "HomeScreen"
 
 @Composable
 fun HomeScreen() {
     val scaffoldState = remember { ScaffoldState() }
 
-    val imgHamburger = imageResource(R.drawable.img_menu_hamburger)
 
     val imgDrawer = imageResource(R.drawable.img_drawer_top)
 
@@ -90,16 +89,7 @@ fun HomeScreen() {
                 }
             }
         },
-        topAppBar = {
-            TopAppBar(
-                title = { Text("Simple Scaffold Screen") },
-                navigationIcon = {
-                    AppBarIcon(imgHamburger, onClick = {
-                        scaffoldState.drawerState = DrawerState.Opened
-                    })
-                }
-            )
-        },
+        topAppBar = { TopBar(callback = { scaffoldState.drawerState = DrawerState.Opened }) },
         floatingActionButtonPosition = Scaffold.FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(onClick = { /* fab click handler */ }) {
@@ -129,22 +119,22 @@ fun HomeScreen() {
                     }
                 }
             }
-
         }
     )
 }
 
 @Composable
-private fun TopBar() {
-    Column {
-        TopAppBar(
-            title = { Text(text = "JetPack Starter") },
-            navigationIcon = {
+fun TopBar(callback: () -> Unit) {
+    val imgHamburger = imageResource(R.drawable.img_menu_hamburger)
 
-            }
-        )
-
-    }
+    TopAppBar(
+        title = { Text("Simple Scaffold Screen") },
+        navigationIcon = {
+            AppBarIcon(imgHamburger, onClick = {
+                callback()
+            })
+        }
+    )
 }
 
 @Composable
