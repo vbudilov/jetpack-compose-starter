@@ -70,7 +70,7 @@ object CognitoAuthService {
                 override fun onResult(signUpResult: SignUpResult?) {
                     ThreadUtils.runOnUiThread(Runnable {
                         Log.d(
-                            null,
+                            TAG,
                             "Sign-up callback state: " + signUpResult?.confirmationState
                         )
                         if (signUpResult?.confirmationState != true) {
@@ -92,6 +92,9 @@ object CognitoAuthService {
             })
     }
 
+    /**
+     * This function is called to confirm a new user registration
+     */
     fun confirmSignup(username: String, code: String) {
         AWSMobileClient.getInstance().confirmSignUp(
             username,
@@ -101,7 +104,7 @@ object CognitoAuthService {
                 override fun onResult(signUpResult: SignUpResult) {
                     ThreadUtils.runOnUiThread(Runnable {
                         Log.d(
-                            null,
+                            TAG,
                             "Sign-up callback state: " + signUpResult.confirmationState
                         )
                         if (!signUpResult.confirmationState) {
@@ -130,7 +133,7 @@ object CognitoAuthService {
                 override fun onResult(signUpResult: SignUpResult) {
                     ThreadUtils.runOnUiThread(Runnable {
                         Log.i(
-                            null, "A verification code has been sent via" +
+                            TAG, "A verification code has been sent via" +
                                     signUpResult.userCodeDeliveryDetails.deliveryMedium
                                     + " at " +
                                     signUpResult.userCodeDeliveryDetails.destination
@@ -159,7 +162,7 @@ object CognitoAuthService {
                 override fun onResult(signInResult: SignInResult) {
                     ThreadUtils.runOnUiThread(Runnable {
                         Log.d(
-                            null,
+                            TAG,
                             "Sign-in callback state: " + signInResult.signInState
                         )
                         when (signInResult.signInState) {
@@ -206,7 +209,7 @@ object CognitoAuthService {
                 override fun onResult(signInResult: SignInResult) {
                     ThreadUtils.runOnUiThread(Runnable {
                         Log.d(
-                            null,
+                            TAG,
                             "Sign-in callback state: " + signInResult.signInState
                         )
                         when (signInResult.signInState) {
@@ -235,7 +238,7 @@ object CognitoAuthService {
                         when (result.state) {
                             ForgotPasswordState.CONFIRMATION_CODE -> println("Confirmation code is sent to reset password")
                             else -> Log.e(
-                                null,
+                                TAG,
                                 "un-supported forgot password state"
                             )
                         }
@@ -262,7 +265,7 @@ object CognitoAuthService {
                         when (result.state) {
                             ForgotPasswordState.DONE -> println("Password changed successfully")
                             else -> Log.e(
-                                null,
+                                TAG,
                                 "un-supported forgot password state"
                             )
                         }

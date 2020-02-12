@@ -9,6 +9,7 @@ import androidx.ui.graphics.Color
 import androidx.ui.layout.*
 import androidx.ui.material.Button
 import androidx.ui.material.ButtonStyle
+import androidx.ui.material.TextButtonStyle
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
 import com.budilov.starter.common.InputError
@@ -85,6 +86,27 @@ fun LoginScreen() {
                             }
                         }
                     })
+            }
+
+            Container(expanded = true) {
+                Padding(top = 15.dp) {
+                    Row(modifier = LayoutWidth.Fill) {
+                        Container(alignment = Alignment.TopLeft) {
+
+                            Button(text = "Register", style = TextButtonStyle(), onClick = {
+                                authScreenNavigation(AvailableAuthScreen.REGISTRATION)
+                            })
+                        }
+                        Container(alignment = Alignment.TopRight, expanded = true) {
+                            Button(
+                                text = "Forgot Password?",
+                                style = TextButtonStyle(),
+                                onClick = {
+                                    authScreenNavigation(AvailableAuthScreen.PASSWORD_RESET)
+                                })
+                        }
+                    }
+                }
             }
         }
     }

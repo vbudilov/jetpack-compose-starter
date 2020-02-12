@@ -11,10 +11,7 @@ import androidx.ui.material.surface.Surface
 import androidx.ui.res.imageResource
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
-import com.amazonaws.mobile.client.AWSMobileClient
 import com.budilov.starter.R
-import com.budilov.starter.ui.AvailableTopLevelScreens
-import com.budilov.starter.ui.topLevelNavigation
 
 enum class AvailableAuthScreen {
     LOGIN, REGISTRATION, PASSWORD_RESET, PASSWORD_CONFIRM
@@ -24,12 +21,10 @@ enum class AvailableAuthScreen {
 data class CurrentScreen(var currentAuthScreen: AvailableAuthScreen = AvailableAuthScreen.LOGIN)
 
 val currentScreen = CurrentScreen()
+const val TAG = "AuthScreen"
 
 @Composable
 fun AuthScreen() {
-
-    if (AWSMobileClient.getInstance()?.isSignedIn == true)
-        topLevelNavigation(AvailableTopLevelScreens.HOME)
 
     val image = imageResource(R.drawable.img_logo)
 
@@ -45,6 +40,7 @@ fun AuthScreen() {
                         DrawImage(image = image)
                     }
                 }
+
                 Padding(padding = 10.dp) {
                     when (currentScreen.currentAuthScreen) {
                         AvailableAuthScreen.LOGIN -> LoginScreen()
@@ -78,5 +74,6 @@ fun AuthScreenRegisterPreview() {
  *
  */
 fun authScreenNavigation(destination: AvailableAuthScreen) {
-    currentScreen.currentAuthScreen = destination
+    if (currentScreen.currentAuthScreen != destination)
+        currentScreen.currentAuthScreen = destination
 }

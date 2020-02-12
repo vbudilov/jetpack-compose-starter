@@ -3,7 +3,6 @@ package com.budilov.starter.ui
 import android.util.Log
 import androidx.compose.Composable
 import androidx.compose.Model
-import androidx.compose.state
 import androidx.ui.foundation.isSystemInDarkTheme
 import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
@@ -19,8 +18,6 @@ import androidx.ui.unit.sp
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.budilov.starter.ui.auth.AuthScreen
 import com.budilov.starter.ui.home.HomeScreen
-import com.budilov.starter.ui.home.TAG
-
 
 val lightColors = lightColorPalette(
     primary = Color(0xFF1EB980),
@@ -56,25 +53,24 @@ enum class AvailableTopLevelScreens {
 data class CurrentTopLevelScreen(var currentScreen: AvailableTopLevelScreens)
 
 
-val currentTopLevelScreens = CurrentTopLevelScreen(currentScreen = AvailableTopLevelScreens.HOME)
+val currentTopLevelScreens = CurrentTopLevelScreen(currentScreen = AvailableTopLevelScreens.AUTH)
+
+const val TAG = "MyAppUI"
 
 @Composable
 fun MyAppUI() {
 
-    val state = state { currentTopLevelScreens }
-
     if (AWSMobileClient.getInstance() == null || !AWSMobileClient.getInstance().isSignedIn) {
-        Log.i(TAG, "Not logged in")
+        Log.i(com.budilov.starter.ui.auth.TAG, "Not logged in")
         topLevelNavigation(AvailableTopLevelScreens.AUTH)
-
     } else {
-        Log.i(TAG, "logged in")
+        Log.i(com.budilov.starter.ui.auth.TAG, "logged in")
         topLevelNavigation(AvailableTopLevelScreens.HOME)
     }
 
     MaterialTheme(colors = colors, typography = typography) {
         Column {
-            when (state.value.currentScreen) {
+            when (currentTopLevelScreens.currentScreen) {
                 AvailableTopLevelScreens.AUTH -> AuthScreen()
                 AvailableTopLevelScreens.HOME -> HomeScreen()
             }
@@ -98,6 +94,7 @@ fun MyAppPreviewNotLoggedIn() {
     MyAppUI()
 }
 
-fun topLevelNavigation(currentScreen: AvailableTopLevelScreens) {
-    currentTopLevelScreens.currentScreen = currentScreen
+fun topLevelNavigation(nextScreen: AvailableTopLevelScreens) {
+    if (currentTopLevelScreens.currentScreen != nextScreen)
+        currentTopLevelScreens.currentScreen = nextScreen
 }

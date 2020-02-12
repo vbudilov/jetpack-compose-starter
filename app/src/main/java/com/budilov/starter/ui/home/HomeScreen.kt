@@ -2,6 +2,7 @@ package com.budilov.starter.ui.home
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.Composable
 import androidx.compose.ambient
@@ -44,6 +45,14 @@ fun HomeScreen() {
 
 
     val imgDrawer = imageResource(R.drawable.img_drawer_top)
+
+    if (AWSMobileClient.getInstance() == null || !AWSMobileClient.getInstance().isSignedIn) {
+        Log.i(TAG, "Not logged in")
+        topLevelNavigation(AvailableTopLevelScreens.AUTH)
+    } else {
+        Log.i(TAG, "logged in")
+        topLevelNavigation(AvailableTopLevelScreens.HOME)
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
